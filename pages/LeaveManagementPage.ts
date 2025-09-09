@@ -75,8 +75,19 @@ export class LeaveManagementPage {
   }
 
   async selectLead(lead: string) {
-    await this.leadOption_wait.waitFor({ state: 'visible', timeout: 5000 });
-    await this.selectLead_applyLeave.selectOption(lead);
+    //await this.selectLead_applyLeave.waitFor({ state: "visible" });
+    
+    //await this.leadOption_wait.waitFor({ state: 'visible' });
+    //await this.selectLead_applyLeave.selectOption(lead);
+
+      // Wait for the dropdown to be visible and click it
+  await this.selectLead_applyLeave.waitFor({ state: "visible", timeout: 10000 });
+  await this.selectLead_applyLeave.click();
+
+  const leadOption = this.page.locator("[name='lead']>option", { hasText: lead });
+  await leadOption.waitFor({ state: "visible", timeout: 10000 });
+
+  await leadOption.click();
   }
 
   async fillSubject(subject: string) {
