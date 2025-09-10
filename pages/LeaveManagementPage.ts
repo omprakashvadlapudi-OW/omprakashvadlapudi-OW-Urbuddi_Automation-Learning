@@ -15,7 +15,7 @@ export class LeaveManagementPage {
   readonly selectLead_applyLeave: Locator;
   readonly existWarning_applyLeave: Locator;
   readonly close_applyLeave: Locator;
-  readonly leadOption_wait:Locator;
+  readonly leadOption_wait: Locator;
 
   readonly dataGen: DataGenerator;
 
@@ -36,7 +36,7 @@ export class LeaveManagementPage {
     this.dataGen = new DataGenerator();
     this.existWarning_applyLeave = this.page.locator(".modal-container .modal-children p:last-of-type");
     this.close_applyLeave = this.page.locator(".modal-container svg");
-    this.leadOption_wait=this.page.locator("[name='lead']>option")
+    this.leadOption_wait = this.page.locator("[name='lead']>option")
   }
 
   async applyLeave(
@@ -76,18 +76,17 @@ export class LeaveManagementPage {
 
   async selectLead(lead: string) {
     //await this.selectLead_applyLeave.waitFor({ state: "visible" });
-    
+
     //await this.leadOption_wait.waitFor({ state: 'visible' });
     //await this.selectLead_applyLeave.selectOption(lead);
 
-      // Wait for the dropdown to be visible and click it
-  await this.selectLead_applyLeave.waitFor({ state: "visible", timeout: 10000 });
-  await this.selectLead_applyLeave.click();
+    await this.selectLead_applyLeave.waitFor({ state: "visible", timeout: 10000 });
+    await this.selectLead_applyLeave.click();
 
-  const leadOption = this.page.locator("[name='lead']>option", { hasText: lead });
-  await leadOption.waitFor({ state: "visible", timeout: 10000 });
+    const leadOption = this.page.locator("[name='lead']>option", { hasText: lead });
+    await leadOption.waitFor({ state: "visible"});
 
-  await leadOption.click();
+    await leadOption.click();
   }
 
   async fillSubject(subject: string) {

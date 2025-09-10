@@ -36,7 +36,6 @@ test.describe.serial("Leave Management Suite", () => {
         await leavePage.close_applyLeave.click();
         console.log(`Attempt ${attempt}: Warning received, retrying...`);
       } else {
-        // Success
         const expectedMessage =
           leaveData[leave_index].leaveType === "workFromHome"
             ? "WFH Applied Successfully"
@@ -48,7 +47,7 @@ test.describe.serial("Leave Management Suite", () => {
 
         console.log(`Attempt ${attempt}: Success message received`);
         success = true;
-        break; // exit loop on success
+        break; 
       }
     }
 
