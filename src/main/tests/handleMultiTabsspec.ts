@@ -1,6 +1,6 @@
 import { MultipleTabsPage } from "../pages/MultipleTabsPage";
 import { test,expect,Browser,Page,BrowserContext } from "@playwright/test";
-import * as MTdata from "../test-data/handleMultiTabs.json";
+import * as MTdata from "../../resources/test-data/handleMultiTabs.json";
 
 
 test.describe.serial("Multiple Tab Suite",async()=>{

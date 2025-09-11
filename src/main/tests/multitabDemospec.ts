@@ -21,6 +21,7 @@ test.only("Handle multiple unknown tabs", async ({ browser }) => {
 
     await expect(newPage).not.toHaveTitle("");
   }
+  
 
   await page.waitForTimeout(3000);
 

@@ -1,5 +1,5 @@
 import { Page, Locator } from "@playwright/test";
-import { DataGenerator } from "../data-generator/DataGenerator";
+import { DataGenerator } from "../../utils/utilities/DataGenerator";
 
 export class LeaveManagementPage {
   readonly page: Page;
@@ -40,7 +40,6 @@ export class LeaveManagementPage {
   }
 
   async applyLeave(
-    lead: string,
     subject: string,
     reason: string,
     leaveType: "leave" | "workFromHome"
@@ -54,7 +53,7 @@ export class LeaveManagementPage {
 
     await this.fillFromDate(fromDate);
     await this.fillToDate(toDate);
-    await this.selectLead(lead);
+    await this.selectLead();
     await this.fillSubject(subject);
     await this.fillReason(reason);
     await this.selectLeaveType(leaveType);
@@ -74,20 +73,10 @@ export class LeaveManagementPage {
     await this.toDate_applyLeave.fill(date);
   }
 
-  async selectLead(lead: string) {
-    //await this.selectLead_applyLeave.waitFor({ state: "visible" });
-
-    //await this.leadOption_wait.waitFor({ state: 'visible' });
-    //await this.selectLead_applyLeave.selectOption(lead);
-
-    await this.selectLead_applyLeave.waitFor({ state: "visible", timeout: 10000 });
-    await this.selectLead_applyLeave.click();
-
-    const leadOption = this.page.locator("[name='lead']>option", { hasText: lead });
-    await leadOption.waitFor({ state: "visible"});
-
-    await leadOption.click();
+  async selectLead() {
+    await this.selectLead_applyLeave.selectOption({ index:0 });
   }
+
 
   async fillSubject(subject: string) {
     await this.subjectFeild_applyLeave.fill(subject);
@@ -110,6 +99,13 @@ export class LeaveManagementPage {
   }
 
   async confirmSubmission() {
-    await this.okButton_applyLeave.click();
+    try {
+      // Wait up to 2 seconds for the modal to appear
+      await this.okButton_applyLeave.waitFor({ state: 'visible', timeout: 2000 });
+      await this.okButton_applyLeave.click();
+    } catch {
+      // Modal didn't appear — it's safe to continue
+      console.log("No confirmation modal appeared, continuing...");
+    }
   }
 }

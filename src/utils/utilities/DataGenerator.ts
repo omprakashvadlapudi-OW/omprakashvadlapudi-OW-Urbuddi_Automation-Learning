@@ -7,6 +7,14 @@ export class DataGenerator {
     return Math.floor(Math.random() * (maxFloor - minCeil + 1)) + minCeil;
   }
 
+  getCredentials(name:string){
+    const randomNum = this.getRandomInt(10, 99);
+    const email:string=`${name}${randomNum}@gmail.com`;
+    const password:string=`${name}$@123`;
+
+    return {email,password};
+  }
+
   getFromAndToDate(minAttr:string,maxAttr:string) {
     const minDate = new Date(minAttr);
     const maxDate = new Date(maxAttr);
