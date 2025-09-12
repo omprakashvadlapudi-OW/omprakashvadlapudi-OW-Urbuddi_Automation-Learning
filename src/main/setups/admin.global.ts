@@ -11,7 +11,7 @@ async function globalSetup() {
 
   const login = new LoginPage(page);
   await login.openWebsite(config.baseURL);
-  await login.loginToApplication(loginData[0].email, loginData[0].password);
+  await login.loginToApplication(loginData.email, loginData.password);
   await expect(login.dashboardTitle).toContainText("Dashboard");
 
   await page.context().storageState({ path: "src/resources/storage/adminState.json" });

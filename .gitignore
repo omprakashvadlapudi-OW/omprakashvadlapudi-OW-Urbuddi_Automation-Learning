@@ -6,8 +6,9 @@ test-results/
 playwright-report/
 playwright/.cache/
 
-# Project-specific generated/temporary files
-resources/storage/
+
+src/resources/storage/
+src/resources/test-data/
 
 # Logs
 *.log

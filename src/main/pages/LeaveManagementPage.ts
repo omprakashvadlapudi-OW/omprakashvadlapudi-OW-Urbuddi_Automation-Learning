@@ -16,6 +16,8 @@ export class LeaveManagementPage {
   readonly existWarning_applyLeave: Locator;
   readonly close_applyLeave: Locator;
   readonly leadOption_wait: Locator;
+  readonly WFHSuccessMessage:Locator;
+  readonly LeaveSuccessMessage:Locator;
 
   readonly dataGen: DataGenerator;
 
@@ -36,7 +38,9 @@ export class LeaveManagementPage {
     this.dataGen = new DataGenerator();
     this.existWarning_applyLeave = this.page.locator(".modal-container .modal-children p:last-of-type");
     this.close_applyLeave = this.page.locator(".modal-container svg");
-    this.leadOption_wait = this.page.locator("[name='lead']>option")
+    this.leadOption_wait = this.page.locator("[name='lead']>option");
+    this.WFHSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
+    this.LeaveSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
   }
 
   async applyLeave(
@@ -100,11 +104,9 @@ export class LeaveManagementPage {
 
   async confirmSubmission() {
     try {
-      // Wait up to 2 seconds for the modal to appear
       await this.okButton_applyLeave.waitFor({ state: 'visible', timeout: 2000 });
       await this.okButton_applyLeave.click();
     } catch {
-      // Modal didn't appear — it's safe to continue
       console.log("No confirmation modal appeared, continuing...");
     }
   }

@@ -1,4 +1,3 @@
-//import { test, expect, Page } from "@playwright/test";
 import { test, expect } from "../../utils/base-fixture/baseFixture";
 import { Homepage } from "../pages/Homepage";
 import { DataGenerator } from "../../utils/utilities/DataGenerator";
@@ -8,16 +7,22 @@ import { LoginPage } from "../pages/LoginPage";
 import { config } from "../../resources/config/config"
 import fs from "fs";
 import path from "path";
+import { Page } from "@playwright/test";
 
 
 
 
-let page;
+test.use({ storageState: undefined });
 
 
 test.describe.serial('Add Functionality Suite', () => {
+
+    test.use({ storageState: undefined });
+    let page: Page;
+    const dummy = new DataGenerator();
+    const { email, password } = dummy.getCredentials(empData[0].firstName);``
     test.beforeAll(async ({ browser, adminCredentials }) => {
-        const context = await browser.newContext();  // create 1 context
+        const context = await browser.newContext();  
         page = await context.newPage();
         const loginPage = new LoginPage(page);
         await loginPage.openWebsite(config.baseURL);
@@ -29,10 +34,7 @@ test.describe.serial('Add Functionality Suite', () => {
         const homepage = new Homepage(page);
         await homepage.clickOnEmployees();
         await expect(page).toHaveURL(/allemployees/);
-        const dummy = new DataGenerator();
         const empPage = new EmployeesPage(page);
-        const { email, password } = dummy.getCredentials(empData[0].firstName);
-
         await expect(empPage.addEmployeeButton).toBeVisible();
 
         await empPage.addEmployees(
@@ -60,6 +62,23 @@ test.describe.serial('Add Functionality Suite', () => {
         const data = { email, password };
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
         console.log("Employee credentials saved to:", filePath);
+    });
+
+    test("Apply Leave", async () => {
+        const { chromium } = require("@playwright/test");
+        const browser = await chromium.launch({ headless: true });
+        const context = await browser.newContext();
+        const page = await context.newPage();
+
+
+        const login = new LoginPage(page);
+        await login.openWebsite(config.baseURL);
+        await login.loginToApplication(email, password);
+        await expect(login.dashboardTitle).toContainText("Dashboard");
+
+        await page.context().storageState({ path: "src/resources/storage/adminState.json" });
+
+        await browser.close();
     });
 
     test.afterAll(async () => {

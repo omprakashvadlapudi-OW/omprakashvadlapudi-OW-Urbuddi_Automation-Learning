@@ -8,7 +8,7 @@ export class DataGenerator {
   }
 
   getCredentials(name:string){
-    const randomNum = this.getRandomInt(10, 99);
+    const randomNum = this.getRandomInt(100, 999);
     const email:string=`${name}${randomNum}@gmail.com`;
     const password:string=`${name}$@123`;
 

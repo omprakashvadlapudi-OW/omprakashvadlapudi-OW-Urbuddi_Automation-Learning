@@ -35,7 +35,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    storageState: 'src/resources/storage/adminState.json',
+    //storageState: 'src/resources/storage/adminState.json',
   },
 
   /* Configure projects for major browsers */
@@ -43,10 +43,16 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'],
-        //storageState: "storage/userState.json"
+        storageState: "src/resources/storage/adminState.json"
        },
     },
-
+    {
+      name: "chromium-noState", // 👈 for fresh login tests
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: undefined,
+      },
+    },
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },

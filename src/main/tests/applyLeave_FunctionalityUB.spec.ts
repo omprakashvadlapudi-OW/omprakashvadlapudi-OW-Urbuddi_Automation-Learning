@@ -8,6 +8,7 @@ let page: Page;
 
 test.describe.serial("Leave Management Suite", () => {
   test.beforeAll(async ({ browser }) => {
+    
     const context = await browser.newContext({ storageState: "src/resources/storage/adminState.json" });
     page = await context.newPage();
     await page.goto(config.baseURL);
@@ -20,9 +21,6 @@ test.describe.serial("Leave Management Suite", () => {
     await expect(page).toHaveURL(/leave_management/);
     const leavePage = new LeaveManagementPage(page);
 
-
-
-
     await leavePage.applyLeave(
 
       leaveData[0].reason!,
@@ -31,14 +29,12 @@ test.describe.serial("Leave Management Suite", () => {
     );
 
     if(leaveData[0].leaveType=="workFromHome"){
-      await expect(page.locator("#root .leave-history-container [aria-live='polite']")).toHaveText("WFH Applied Successfully");
+      await expect(leavePage.WFHSuccessMessage).toHaveText("WFH Applied Successfully");
 
     }
     else{
-      await expect(page.locator("#root .leave-history-container [aria-live='polite']")).toHaveText("Leave Applied Successfully");
+      await expect(leavePage.LeaveSuccessMessage).toHaveText("Leave Applied Successfully");
     }
-
-    
   });
 
   test.afterAll(async () => {
