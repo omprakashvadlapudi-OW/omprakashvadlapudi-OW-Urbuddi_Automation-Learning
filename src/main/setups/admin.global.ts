@@ -1,22 +1,35 @@
-import { chromium, expect } from "@playwright/test";
+import { chromium, Page, Browser, BrowserContext, expect } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import * as loginData from "../../resources/test-data/generatedEmployee.json";
 import { config } from "../../resources/config/config";
 
-async function globalSetup() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
+export class GlobalSetup {
+  private browser: Browser | undefined;
+  private context: BrowserContext | undefined;
+  private page: Page | undefined;
 
+  async init() {
+    this.browser = await chromium.launch({ headless: true });
+    this.context = await this.browser.newContext();
+    this.page = await this.context.newPage();
 
-  const login = new LoginPage(page);
-  await login.openWebsite(config.baseURL);
-  await login.loginToApplication(loginData.email, loginData.password);
-  await expect(login.dashboardTitle).toContainText("Dashboard");
+    const loginPage = new LoginPage(this.page);
+    await loginPage.openWebsite(config.baseURL);
+    await loginPage.loginToApplication(loginData.email, loginData.password);
+    await expect(loginPage.dashboardTitle).toContainText("Dashboard");
 
-  await page.context().storageState({ path: "src/resources/storage/adminState.json" });
+    await this.context.storageState({
+      path: "src/resources/storage/adminState.json",
+    });
+  }
 
-  await browser.close();
+  getPage(): Page {
+    if (!this.page) throw new Error("Page not initialized. Call init() first.");
+    return this.page;
+  }
+
+  async close(): Promise<void> {
+    if (this.context) await this.context.close();
+    if (this.browser) await this.browser.close();
+  }
 }
-
-export default globalSetup;

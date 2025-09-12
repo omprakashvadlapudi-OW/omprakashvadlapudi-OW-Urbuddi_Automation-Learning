@@ -22,6 +22,8 @@ export class EmployeesPage {
   private locationInput: Locator;
   private reportToDropdown: Locator;
   private addButton: Locator;
+  readonly successMessage:Locator;
+
 
   constructor(page: Page) {
     this.page = page;
@@ -45,6 +47,7 @@ export class EmployeesPage {
     this.locationInput = this.page.locator("input[name='location']");
     this.reportToDropdown = this.page.locator("#reportingTo");
     this.addButton = this.page.locator("button[type='submit']");
+    this.successMessage=this.page.locator("#root .all-employees-page div[role='status']");
   }
 
   async addEmployees(

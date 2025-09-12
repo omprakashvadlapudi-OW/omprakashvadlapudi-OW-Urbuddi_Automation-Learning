@@ -8,8 +8,9 @@ export class AlterPage{
     readonly promptAlert:Locator;
 
 
-    constructor(page){
+    constructor(page:Page){
         this.page=page;
+
         this.simpleAlert=this.page.locator("#accept");
         this.confirmAlert=this.page.locator("#confirm");
         this.promptAlert=this.page.locator("#prompt");

@@ -8,7 +8,7 @@ export class IFramesPage {
     readonly iframe: FrameLocator;
     readonly searchBar: Locator;
     readonly iframe_NameAttr: Frame | null;
-    readonly searchBar1: Locator;
+    //readonly searchBar1: Locator;
 
     constructor(page: Page) {
         this.page = page;

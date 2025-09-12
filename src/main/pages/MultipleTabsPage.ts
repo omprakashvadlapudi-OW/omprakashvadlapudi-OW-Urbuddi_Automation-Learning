@@ -2,10 +2,9 @@ import { Browser, BrowserContext, Locator, Page,expect } from "@playwright/test"
 
 
 export class MultipleTabsPage {
-    browser: Browser;
     page: Page;
     context: BrowserContext
-    initialPages: number;
+    initialPages!: number;
 
     readonly multiTabButton: Locator;
     readonly clickButton: Locator;

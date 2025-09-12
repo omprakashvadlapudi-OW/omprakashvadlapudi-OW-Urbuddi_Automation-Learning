@@ -1,6 +1,6 @@
 import { Page, Locator } from "@playwright/test";
 
-export class Homepage {
+export class HomePage {
   private page: Page;
 
   readonly employeesLink: Locator;

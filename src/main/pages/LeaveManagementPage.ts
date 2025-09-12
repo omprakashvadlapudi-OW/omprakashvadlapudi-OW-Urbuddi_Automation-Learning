@@ -16,8 +16,8 @@ export class LeaveManagementPage {
   readonly existWarning_applyLeave: Locator;
   readonly close_applyLeave: Locator;
   readonly leadOption_wait: Locator;
-  readonly WFHSuccessMessage:Locator;
-  readonly LeaveSuccessMessage:Locator;
+  readonly wfhSuccessMessage:Locator;
+  readonly leaveSuccessMessage:Locator;
 
   readonly dataGen: DataGenerator;
 
@@ -39,14 +39,14 @@ export class LeaveManagementPage {
     this.existWarning_applyLeave = this.page.locator(".modal-container .modal-children p:last-of-type");
     this.close_applyLeave = this.page.locator(".modal-container svg");
     this.leadOption_wait = this.page.locator("[name='lead']>option");
-    this.WFHSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
-    this.LeaveSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
+    this.wfhSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
+    this.leaveSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
   }
 
   async applyLeave(
     subject: string,
     reason: string,
-    leaveType: "leave" | "workFromHome"
+    leaveType: string
   ) {
     await this.openApplyLeaveForm();
     await this.confirmSubmission();
@@ -90,7 +90,7 @@ export class LeaveManagementPage {
     await this.reasonTextArea_applyLeave.fill(reason);
   }
 
-  async selectLeaveType(type: "leave" | "workFromHome") {
+  async selectLeaveType(type:string) {
     if (type === "leave") {
       await this.leaveCheckbox_applyLeave.check();
     } else {
