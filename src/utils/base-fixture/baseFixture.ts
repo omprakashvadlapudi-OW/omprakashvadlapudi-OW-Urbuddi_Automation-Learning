@@ -1,70 +1,97 @@
-import { test as base, Page } from "@playwright/test";
+import { test as base, Page, BrowserContext } from "@playwright/test";
 import { config } from "../../resources/config/config";
-import { LoginPage } from "../../main/pages/LoginPage";
 import { HomePage } from "../../main/pages/HomePage";
 import { EmployeesPage } from "../../main/pages/EmployeesPage";
 import { DataGenerator } from "../utilities/DataGenerator";
 import { LeaveManagementPage } from "../../main/pages/LeaveManagementPage";
-import { GlobalSetup } from "../../main/setups/admin.global"
+import { GlobalSetup } from "../../main/setups/emp.global";
 
 type TestFixtures = {
   adminCredentials: { email: string; password: string };
-  loginPage: LoginPage;
-  homePage: HomePage;
-  empPage: EmployeesPage;
+  empHomePage: HomePage;
+  adminHomePage: HomePage;
+  empPageAdmin: EmployeesPage;
   dataGen: DataGenerator;
-  leavePage: LeaveManagementPage;
-  globalPage: Page;
+  empLeavePage: LeaveManagementPage;
   globalSetup: GlobalSetup;
-  
+  adminStorage: Page;
+  empStorage: Page;
 };
 
 export const test = base.extend<TestFixtures>({
-  // Shared globalPage per worker (= per spec file usually)
-  globalPage: [
-    async ({ browser }, use) => {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      await use(page);
-      await context.close();
-    },
-    { scope: "worker" }as any,
-  ],
-  globalSetup: async ({}, use) => {
+  adminStorage: async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: "src/resources/storage/adminState.json",
+      recordVideo: { dir: "video/"},
+     });
+    const page = await context.newPage();
+    await page.goto(config.baseURL);
+    await use(page);
+  },
+
+  empStorage: async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: "src/resources/storage/empState.json",
+    
+      recordVideo: { dir: "video/"},
+     });
+    const page = await context.newPage();
+    await page.goto(config.baseURL);
+    await use(page);
+    await context.close();
+  },
+
+  globalSetup: async ({ }, use) => {
     const setup = new GlobalSetup();
     await setup.init();
     await use(setup);
     await setup.close();
   },
 
-  adminCredentials: async ({}, use) => {
+  adminCredentials: async ({ }, use) => {
     await use(config.admin);
   },
 
-  loginPage: async ({ globalPage }, use) => {
-    const loginPage = new LoginPage(globalPage);
-    await use(loginPage);
-  },
-
-  homePage: async ({ globalPage }, use) => {
-    const homePage = new HomePage(globalPage);
+  adminHomePage: async ({ adminStorage }, use) => {
+    const homePage = new HomePage(adminStorage);
     await use(homePage);
   },
 
-  empPage: async ({ globalPage }, use) => {
-    const empPage = new EmployeesPage(globalPage);
-    await use(empPage);
+  empHomePage: async ({ empStorage }, use) => {
+    const homePage = new HomePage(empStorage);
+    await use(homePage);
   },
 
-  dataGen: async ({}, use) => {
-    const dataGen = new DataGenerator();
-    await use(dataGen);
-  },
-
-  leavePage: async ({ globalPage }, use) => {
-    const leavePage = new LeaveManagementPage(globalPage);
+  empLeavePage: async ({ empStorage }, use) => {
+    const leavePage = new LeaveManagementPage(empStorage);
     await use(leavePage);
   },
+
+
+  empPageAdmin: async ({ adminStorage }, use) => {
+    await use(new EmployeesPage(adminStorage));
+  },
+
+  dataGen: async ({ }, use) => {
+    await use(new DataGenerator());
+  },
+
 });
+
+
+test.afterEach(async ({ adminStorage, empStorage }, testInfo) => {
+  if (testInfo.status !== testInfo.expectedStatus) {
+    const storages = [adminStorage, empStorage];
+    for (const page of storages) {
+      const video = page?.video?.();
+      if (video) {
+        const path = await video.path();
+        testInfo.attach('Test video', {
+          path,
+          contentType: 'video/mp4',  
+        });
+      }
+    }
+  }
+});
+
 
 export { expect } from "@playwright/test";

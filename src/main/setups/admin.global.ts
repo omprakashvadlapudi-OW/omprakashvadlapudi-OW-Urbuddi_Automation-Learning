@@ -1,35 +1,49 @@
 import { chromium, Page, Browser, BrowserContext, expect } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
-import * as loginData from "../../resources/test-data/generatedEmployee.json";
 import { config } from "../../resources/config/config";
 
-export class GlobalSetup {
-  private browser: Browser | undefined;
-  private context: BrowserContext | undefined;
-  private page: Page | undefined;
+export class AdminGlobalSetup {
+    private browser: Browser | undefined;
+    private context: BrowserContext | undefined;
+    private page: Page | undefined;
 
-  async init() {
-    this.browser = await chromium.launch({ headless: true });
-    this.context = await this.browser.newContext();
-    this.page = await this.context.newPage();
+    async init() {
+        this.browser = await chromium.launch({ headless: true });
+        this.context = await this.browser.newContext();
+        this.page = await this.context.newPage();
 
-    const loginPage = new LoginPage(this.page);
-    await loginPage.openWebsite(config.baseURL);
-    await loginPage.loginToApplication(loginData.email, loginData.password);
-    await expect(loginPage.dashboardTitle).toContainText("Dashboard");
+        console.log("Base URL:", config.baseURL);
+        console.log("Admin Email:", config.admin.email);
 
-    await this.context.storageState({
-      path: "src/resources/storage/adminState.json",
-    });
-  }
 
-  getPage(): Page {
-    if (!this.page) throw new Error("Page not initialized. Call init() first.");
-    return this.page;
-  }
+        const loginPage = new LoginPage(this.page);
+        await loginPage.openWebsite(config.baseURL);
+        await loginPage.loginToApplication(config.admin.email, config.admin.password);
+        await expect(loginPage.dashboardTitle).toContainText("Dashboard");
 
-  async close(): Promise<void> {
-    if (this.context) await this.context.close();
-    if (this.browser) await this.browser.close();
-  }
+        await this.context.storageState({
+            path: "src/resources/storage/adminState.json",
+        });
+    }
+
+    getPage(): Page {
+        if (!this.page) throw new Error("Page not initialized. Call init() first.");
+        return this.page;
+    }
+
+    async close(): Promise<void> {
+        if (this.context) await this.context.close();
+        if (this.browser) await this.browser.close();
+    }
 }
+
+
+(async () => {
+    const setup = new AdminGlobalSetup();
+    await setup.init();
+    await setup.close();
+})();
+
+
+
+//npx ts-node src/main/setups/admin.global.ts
