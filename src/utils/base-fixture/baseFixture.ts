@@ -5,6 +5,7 @@ import { EmployeesPage } from "../../main/pages/EmployeesPage";
 import { DataGenerator } from "../utilities/DataGenerator";
 import { LeaveManagementPage } from "../../main/pages/LeaveManagementPage";
 import { GlobalSetup } from "../../main/setups/emp.global";
+import { Reimbursement } from "../../main/pages/Reimbursement";
 
 type TestFixtures = {
   adminCredentials: { email: string; password: string };
@@ -16,6 +17,7 @@ type TestFixtures = {
   globalSetup: GlobalSetup;
   adminStorage: Page;
   empStorage: Page;
+  empReimbursement:Reimbursement;
 };
 
 export const test = base.extend<TestFixtures>({
@@ -73,6 +75,11 @@ export const test = base.extend<TestFixtures>({
   dataGen: async ({ }, use) => {
     await use(new DataGenerator());
   },
+
+  empReimbursement:async({empStorage},use)=>{
+    const reimbursement=new Reimbursement(empStorage);
+    await use(reimbursement);
+  }
 
 });
 

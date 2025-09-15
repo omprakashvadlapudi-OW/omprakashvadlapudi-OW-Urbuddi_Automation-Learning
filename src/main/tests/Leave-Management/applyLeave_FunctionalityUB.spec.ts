@@ -1,5 +1,5 @@
-import { test, expect } from "../../utils/base-fixture/baseFixture";
-import * as leaveData from "../../resources/test-data/applyLeaveFunctionalityData.json";
+import { test, expect } from "../../../utils/base-fixture/baseFixture";
+import * as leaveData from "../../../resources/test-data/applyLeaveFunctionalityData.json";
 
 test.describe.serial("Leave Management Suite", () => {
   test("Apply Leave Test", async ({ empStorage, empHomePage, empLeavePage }) => {

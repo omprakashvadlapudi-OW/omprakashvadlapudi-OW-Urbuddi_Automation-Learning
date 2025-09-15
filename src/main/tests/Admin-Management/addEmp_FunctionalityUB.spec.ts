@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { test, expect } from "../../utils/base-fixture/baseFixture";
-import * as empData from "../../resources/test-data/add_functionalityData.json";
+import { test, expect } from "../../../utils/base-fixture/baseFixture";
+import * as empData from "../../../resources/test-data/add_functionalityData.json";
 
 test.describe.serial("Add Functionality Suite", () => {
     let email: string;

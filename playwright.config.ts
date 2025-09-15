@@ -4,17 +4,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({path:".env"});
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   //globalSetup: require.resolve("./setups/admin.global.ts"),
   testDir: './src/main/tests',
@@ -42,27 +31,36 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+
+    {
+      name: "setup",
+      testMatch: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'],
         storageState: "src/resources/storage/adminState.json"
        },
+       dependencies: ["setup"],
     },
     {
-      name: "chromium-noState", // 👈 for fresh login tests
+      name: "chromium-noState", 
       use: {
         ...devices["Desktop Chrome"],
         storageState: undefined,
       },
+      dependencies: ["setup"],
     },
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      dependencies: ["setup"],
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      dependencies: ["setup"],
     },
 
     /* Test against mobile viewports. */
