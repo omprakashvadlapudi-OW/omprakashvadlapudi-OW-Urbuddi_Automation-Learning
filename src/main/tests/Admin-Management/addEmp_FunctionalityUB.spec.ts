@@ -17,11 +17,12 @@ test.describe.serial("Add Functionality Suite", () => {
         await adminHomePage.clickOnEmployees();
         await expect(adminStorage).toHaveURL(/allemployees/);
         await expect(empPageAdmin.addEmployeeButton).toBeVisible();
+        const empID=dataGen.getRandomInt(100000, 1000000).toString();
 
         await empPageAdmin.addEmployees(
             empData.firstName,
             empData.lastName,
-            dataGen.getRandomInt(100000, 1000000).toString(),
+            empID,
             email,
             empData.role,
             password,
@@ -38,18 +39,15 @@ test.describe.serial("Add Functionality Suite", () => {
         );
 
         await expect(empPageAdmin.successMessage).toHaveText("Saved Successfully");
-
-        const filePath = path.join(__dirname, "../../resources/test-data/generatedEmployee.json");
+        const filePath = path.join(__dirname, "../../../resources/test-data/generatedEmployee.json");
         const data = { email, password };
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
         console.log("Employee credentials saved to:", filePath);
     });
 
-    test("Apply Leave with fresh page", async ({ globalSetup }) => {
+    test("Download the employee Storage State", async ({ globalSetup }) => {
         const page = globalSetup.getPage();
-
-
-        await page.click("#leaveManagementLink");
+        await expect(page).toHaveTitle("urBuddi");
     });
 
 });

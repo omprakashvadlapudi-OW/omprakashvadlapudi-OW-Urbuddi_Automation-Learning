@@ -1,4 +1,4 @@
-import { test as base, Page, BrowserContext } from "@playwright/test";
+import { test as base, Page } from "@playwright/test";
 import { config } from "../../resources/config/config";
 import { HomePage } from "../../main/pages/HomePage";
 import { EmployeesPage } from "../../main/pages/EmployeesPage";

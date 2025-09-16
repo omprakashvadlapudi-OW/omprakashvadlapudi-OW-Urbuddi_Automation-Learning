@@ -9,6 +9,8 @@ playwright/.cache/
 
 src/resources/storage/
 src/resources/test-data/
+video/
+videos/
 
 # Logs
 *.log

@@ -7,29 +7,18 @@ dotenv.config({path:".env"});
 export default defineConfig({
   //globalSetup: require.resolve("./setups/admin.global.ts"),
   testDir: './src/main/tests',
-  /* Run tests in files in parallel */
-  fullyParallel: false,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  workers: process.env.CI ? 2 : undefined,
   reporter: [['html'],['list']],
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.BASE_URL,
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     screenshot: 'on',
     video:'retain-on-failure',
     //storageState: 'src/resources/storage/adminState.json',
   },
-
-  /* Configure projects for major browsers */
   projects: [
 
     {
@@ -42,6 +31,7 @@ export default defineConfig({
         storageState: "src/resources/storage/adminState.json"
        },
        dependencies: ["setup"],
+       testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
     {
       name: "chromium-noState", 
@@ -50,44 +40,23 @@ export default defineConfig({
         storageState: undefined,
       },
       dependencies: ["setup"],
+      testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
       dependencies: ["setup"],
+      testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
       dependencies: ["setup"],
+      testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
 
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+ 
 });

@@ -26,4 +26,3 @@ export class HomePage {
     await this.reimbursementLink.click();
   }
 }
-

@@ -16,6 +16,7 @@ export class GlobalSetup {
     const loginPage = new LoginPage(this.page);
     await loginPage.openWebsite(config.baseURL);
     await loginPage.loginToApplication(loginData.email, loginData.password);
+    await this.page.waitForSelector(".page-header-container>p")
     await expect(loginPage.dashboardTitle).toContainText("Dashboard");
 
     await this.context.storageState({
