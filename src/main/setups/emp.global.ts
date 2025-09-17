@@ -1,15 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { chromium, Browser, BrowserContext, expect } from "@playwright/test";
+import { Browser, BrowserContext, expect } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { config } from "../../resources/config/config";
 
-export async function createEmployeeStorageState(email: string, password: string) {
+export async function createEmployeeStorageState(email: string, password: string,browser:Browser) {
   const storagePath = "src/resources/storage/empState.json";
   const dir = path.dirname(storagePath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-  const browser: Browser = await chromium.launch({ headless: true });
   const context: BrowserContext = await browser.newContext();
   const page = await context.newPage();
 
@@ -25,5 +23,4 @@ export async function createEmployeeStorageState(email: string, password: string
   console.log(`Employee storage state saved to: ${storagePath}`);
 
   await context.close();
-  await browser.close();
 }

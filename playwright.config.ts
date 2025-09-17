@@ -23,7 +23,18 @@ export default defineConfig({
   },
   projects: [
      {
-      name: "setup",
+      name: "setup chromium",
+      use: { ...devices['Desktop Chrome'],},
+      testMatch: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
+    },
+    {
+      name: "setup firefox",
+      use: { ...devices['Desktop Firefox'],},
+      testMatch: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
+    },
+    {
+      name: "setup webkit",
+      use: { ...devices['Desktop Safari'],},
       testMatch: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
     {
@@ -32,7 +43,7 @@ export default defineConfig({
         
         storageState: "src/resources/storage/adminState.json"
        },
-       dependencies: ["setup"],
+       dependencies: ["setup chromium"],
        testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
 
@@ -41,13 +52,16 @@ export default defineConfig({
       use: { ...devices['Desktop Firefox'] ,
          storageState: "src/resources/storage/adminState.json"
       },
-      dependencies: ["setup"],
+      dependencies: ["setup firefox"],
       testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'],
+        storageState: "src/resources/storage/adminState.json"
+       },
+      dependencies: ["setup webkit"],
       testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
 

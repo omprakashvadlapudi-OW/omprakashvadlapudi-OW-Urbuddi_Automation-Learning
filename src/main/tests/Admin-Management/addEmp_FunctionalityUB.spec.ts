@@ -12,7 +12,7 @@ test.describe.serial("Add Functionality Suite", () => {
         password = cred.password;
     });
 
-    test("Add Employee Test", async ({ adminStorage, adminHomePage, empPageAdmin, dataGen }) => {
+    test("Add Employee Test", async ({ adminStorage, adminHomePage, empPageAdmin, dataGen,browser }) => {
         await adminHomePage.clickOnEmployees();
         await expect(adminStorage).toHaveURL(/allemployees/);
         await expect(empPageAdmin.addEmployeeButton).toBeVisible();
@@ -37,7 +37,7 @@ test.describe.serial("Add Functionality Suite", () => {
             empData.address
         );
         await expect(empPageAdmin.successMessage).toHaveText("Saved Successfully", { timeout: 3000 });
-        await createEmployeeStorageState(email, password);
+        await createEmployeeStorageState(email, password,browser);
     });
 
 
