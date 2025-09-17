@@ -11,6 +11,7 @@ src/resources/storage/
 src/resources/test-data/
 video/
 videos/
+my-allure-results/
 
 # Logs
 *.log

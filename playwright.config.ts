@@ -13,7 +13,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: [['html'],['list']],
+  reporter: [['html'],['list'],['allure-playwright',{outputFolder:'my-allure-results'}]],
   use: {
     baseURL: process.env.BASE_URL,
     trace: 'on-first-retry',
