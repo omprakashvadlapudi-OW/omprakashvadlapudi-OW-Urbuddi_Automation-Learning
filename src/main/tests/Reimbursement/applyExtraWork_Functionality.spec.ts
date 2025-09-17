@@ -8,7 +8,7 @@ test.describe.serial("Apply Extra Work Suite", ()=>{
 
         await empReimbursement.applyExtraWork(dataGen.getTodayDate(),testData.hours);
 
-        await expect(empReimbursement.workAppliedMessage).toHaveText("Extra work Applied Successfully");
+        await expect(empReimbursement.workAppliedMessage).toHaveText("Extra work Applied Successfully",{timeout:10000});
     });
 
     test.afterAll(async ({ empStorage }) => {

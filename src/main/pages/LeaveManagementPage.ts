@@ -48,6 +48,7 @@ export class LeaveManagementPage {
     reason: string,
     leaveType: string
   ) {
+    
     await this.openApplyLeaveForm();
     await this.confirmSubmission();
     const minAttr = await this.fromDate_applyLeave.getAttribute("min");
@@ -61,10 +62,11 @@ export class LeaveManagementPage {
     await this.fillSubject(subject);
     await this.fillReason(reason);
     await this.selectLeaveType(leaveType);
-    await this.submitLeaveForm();
+    await this.clickSubmitLeaveForm();
   }
 
   async openApplyLeaveForm() {
+    await this.page.waitForLoadState("networkidle");
     await this.page.waitForSelector("//button[text()='Apply Leave']")
     await this.applyLeaveButton.click();
   }
@@ -98,7 +100,8 @@ export class LeaveManagementPage {
     }
   }
 
-  async submitLeaveForm() {
+  async clickSubmitLeaveForm() {
+    await this.submitButton_applyLeave.isVisible();
     await this.submitButton_applyLeave.click();
   }
 

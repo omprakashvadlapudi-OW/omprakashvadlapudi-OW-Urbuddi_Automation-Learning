@@ -14,11 +14,13 @@ test.describe.serial("Leave Management Suite", () => {
 
     if (leaveData.leaveType === "workFromHome") {
       await expect(empLeavePage.wfhSuccessMessage).toHaveText(
-        "WFH Applied Successfully"
+        "WFH Applied Successfully",
+        {timeout: 10000}
       );
     } else {
       await expect(empLeavePage.leaveSuccessMessage).toHaveText(
-        "Leave Applied Successfully"
+        "Leave Applied Successfully",
+        {timeout:10000}
       );
     }
   });

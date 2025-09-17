@@ -32,6 +32,7 @@ export class Reimbursement{
     }
 
     async openApplyExtraWorkForm(){
+        await this.page.waitForLoadState("networkidle");
         await this.page.waitForSelector("//button[.='Apply Extra Work']");
         await this.applyExtraWorkButton.click();
     }

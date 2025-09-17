@@ -2,10 +2,12 @@ import { defineConfig, devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 
 
+
 dotenv.config({path:".env"});
 
 export default defineConfig({
-  //globalSetup: require.resolve("./setups/admin.global.ts"),
+  timeout: 60000, 
+  globalSetup: require.resolve("./src/main/setups/admin.global"),
   testDir: './src/main/tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -20,31 +22,25 @@ export default defineConfig({
     //storageState: 'src/resources/storage/adminState.json',
   },
   projects: [
-
-    {
+     {
       name: "setup",
       testMatch: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'],
+        
         storageState: "src/resources/storage/adminState.json"
        },
        dependencies: ["setup"],
        testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
-    {
-      name: "chromium-noState", 
-      use: {
-        ...devices["Desktop Chrome"],
-        storageState: undefined,
-      },
-      dependencies: ["setup"],
-      testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
-    },
+
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'] ,
+         storageState: "src/resources/storage/adminState.json"
+      },
       dependencies: ["setup"],
       testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
@@ -52,7 +48,6 @@ export default defineConfig({
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-      dependencies: ["setup"],
       testIgnore: ["**/tests/Admin-Management/addEmp_FunctionalityUB.spec.ts"],
     },
 

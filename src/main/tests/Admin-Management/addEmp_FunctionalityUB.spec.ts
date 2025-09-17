@@ -1,7 +1,6 @@
-import fs from "fs";
-import path from "path";
 import { test, expect } from "../../../utils/base-fixture/baseFixture";
 import * as empData from "../../../resources/test-data/add_functionalityData.json";
+import { createEmployeeStorageState } from "../../setups/emp.global";
 
 test.describe.serial("Add Functionality Suite", () => {
     let email: string;
@@ -17,7 +16,7 @@ test.describe.serial("Add Functionality Suite", () => {
         await adminHomePage.clickOnEmployees();
         await expect(adminStorage).toHaveURL(/allemployees/);
         await expect(empPageAdmin.addEmployeeButton).toBeVisible();
-        const empID=dataGen.getRandomInt(100000, 1000000).toString();
+        const empID = dataGen.getRandomInt(100000, 1000000).toString();
 
         await empPageAdmin.addEmployees(
             empData.firstName,
@@ -37,17 +36,13 @@ test.describe.serial("Add Functionality Suite", () => {
             empData.salary,
             empData.address
         );
-
-        await expect(empPageAdmin.successMessage).toHaveText("Saved Successfully");
-        const filePath = path.join(__dirname, "../../../resources/test-data/generatedEmployee.json");
-        const data = { email, password };
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-        console.log("Employee credentials saved to:", filePath);
+        await expect(empPageAdmin.successMessage).toHaveText("Saved Successfully", { timeout: 3000 });
+        await createEmployeeStorageState(email, password);
     });
 
-    test("Download the employee Storage State", async ({ globalSetup }) => {
-        const page = globalSetup.getPage();
-        await expect(page).toHaveTitle("urBuddi");
+
+    test.afterAll(async ({ adminStorage }) => {
+        await adminStorage.close();
     });
 
 });

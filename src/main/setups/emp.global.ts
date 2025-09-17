@@ -1,36 +1,29 @@
-import { chromium, Page, Browser, BrowserContext, expect } from "@playwright/test";
+import fs from "fs";
+import path from "path";
+import { chromium, Browser, BrowserContext, expect } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
-import * as loginData from "../../resources/test-data/generatedEmployee.json";
 import { config } from "../../resources/config/config";
 
-export class GlobalSetup {
-  private browser: Browser | undefined;
-  private context: BrowserContext | undefined;
-  private page: Page | undefined;
+export async function createEmployeeStorageState(email: string, password: string) {
+  const storagePath = "src/resources/storage/empState.json";
+  const dir = path.dirname(storagePath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  async init() {
-    this.browser = await chromium.launch({ headless: true });
-    this.context = await this.browser.newContext();
-    this.page = await this.context.newPage();
+  const browser: Browser = await chromium.launch({ headless: true });
+  const context: BrowserContext = await browser.newContext();
+  const page = await context.newPage();
 
-    const loginPage = new LoginPage(this.page);
-    await loginPage.openWebsite(config.baseURL);
-    await loginPage.loginToApplication(loginData.email, loginData.password);
-    await this.page.waitForSelector(".page-header-container>p")
-    await expect(loginPage.dashboardTitle).toContainText("Dashboard");
+  console.log("Running Employee UI Setup...");
+  console.log("Base URL:", config.baseURL);
+  console.log("Employee Email:", email);
+  const loginPage = new LoginPage(page);
+  await loginPage.openWebsite(config.baseURL);
+  await loginPage.loginToApplication(email, password);
+  await expect(loginPage.dashboardTitle).toContainText("Logout");
 
-    await this.context.storageState({
-      path: "src/resources/storage/empState.json",
-    });
-  }
+  await context.storageState({ path: storagePath });
+  console.log(`Employee storage state saved to: ${storagePath}`);
 
-  getPage(): Page {
-    if (!this.page) throw new Error("Page not initialized. Call init() first.");
-    return this.page;
-  }
-
-  async close(): Promise<void> {
-    if (this.context) await this.context.close();
-    if (this.browser) await this.browser.close();
-  }
+  await context.close();
+  await browser.close();
 }

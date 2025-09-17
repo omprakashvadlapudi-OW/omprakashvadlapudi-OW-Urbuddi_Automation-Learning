@@ -4,7 +4,6 @@ import { HomePage } from "../../main/pages/HomePage";
 import { EmployeesPage } from "../../main/pages/EmployeesPage";
 import { DataGenerator } from "../utilities/DataGenerator";
 import { LeaveManagementPage } from "../../main/pages/LeaveManagementPage";
-import { GlobalSetup } from "../../main/setups/emp.global";
 import { Reimbursement } from "../../main/pages/Reimbursement";
 
 type TestFixtures = {
@@ -14,7 +13,6 @@ type TestFixtures = {
   empPageAdmin: EmployeesPage;
   dataGen: DataGenerator;
   empLeavePage: LeaveManagementPage;
-  globalSetup: GlobalSetup;
   adminStorage: Page;
   empStorage: Page;
   empReimbursement:Reimbursement;
@@ -28,6 +26,7 @@ export const test = base.extend<TestFixtures>({
     const page = await context.newPage();
     await page.goto(config.baseURL);
     await use(page);
+    await context.close();
   },
 
   empStorage: async ({ browser }, use) => {
@@ -41,12 +40,7 @@ export const test = base.extend<TestFixtures>({
     await context.close();
   },
 
-  globalSetup: async ({ }, use) => {
-    const setup = new GlobalSetup();
-    await setup.init();
-    await use(setup);
-    await setup.close();
-  },
+
 
   adminCredentials: async ({ }, use) => {
     await use(config.admin);

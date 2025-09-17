@@ -14,7 +14,7 @@ export class LoginPage {
     this.usernameInput = this.page.locator('#userEmail');
     this.passwordInput = this.page.locator('#userPassword');
     this.loginButton = this.page.locator("button[type='submit']");
-    this.dashboardTitle=this.page.locator(".page-header-container>p");
+    this.dashboardTitle=this.page.locator("//p[text()='Logout']");
   }
 
   async openWebsite(url: string) {

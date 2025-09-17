@@ -91,6 +91,8 @@ export class EmployeesPage {
   }
 
   async open_AddEmployee_section(){
+    await this.page.waitForLoadState("networkidle");
+
     await this.addEmployeeButton.click();
   }
 
