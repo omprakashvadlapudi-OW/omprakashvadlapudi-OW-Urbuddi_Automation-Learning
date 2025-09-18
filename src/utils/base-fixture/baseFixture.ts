@@ -78,21 +78,7 @@ export const test = base.extend<TestFixtures>({
 });
 
 
-test.afterEach(async ({ adminStorage, empStorage }, testInfo) => {
-  if (testInfo.status !== testInfo.expectedStatus) {
-    const storages = [adminStorage, empStorage];
-    for (const page of storages) {
-      const video = page?.video?.();
-      if (video) {
-        const path = await video.path();
-        testInfo.attach('Test video', {
-          path,
-          contentType: 'video/mp4',  
-        });
-      }
-    }
-  }
-});
+
 
 
 export { expect } from "@playwright/test";

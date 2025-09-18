@@ -44,7 +44,7 @@ export class Reimbursement{
         await this.hoursField.fill(hours);
     }
     async selectLead(){
-        await this.selectLeadDropdown.selectOption({index:4});
+        await this.selectLeadDropdown.selectOption({index:6});
     }
     async clickSubmit(){
         await this.submitButton.click();

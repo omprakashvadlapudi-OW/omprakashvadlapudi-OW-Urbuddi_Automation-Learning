@@ -161,7 +161,7 @@ export class EmployeesPage {
   }
 
   async select_ReportTo(){
-    await this.reportToDropdown.selectOption({ index: 3 });
+    await this.reportToDropdown.selectOption({ index: 8 });
   }
 
   async clickAddButton(){
