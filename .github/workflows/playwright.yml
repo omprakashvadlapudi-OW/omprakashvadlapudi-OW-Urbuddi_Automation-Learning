@@ -8,6 +8,12 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
+    env:
+      DEV_URL: ${{ secrets.DEV_URL }}
+      DEV_ADMIN_EMAIL: ${{ secrets.DEV_ADMIN_EMAIL }}
+      DEV_ADMIN_PASSWORD: ${{ secrets.DEV_ADMIN_PASSWORD }}
+    
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
