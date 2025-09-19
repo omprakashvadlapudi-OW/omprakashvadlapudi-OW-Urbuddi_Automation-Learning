@@ -14,8 +14,8 @@ test.describe.serial("Add Functionality Suite", () => {
 
     test("Add Employee Test", async ({ adminStorage, adminHomePage, empPageAdmin, dataGen,browser }) => {
         await adminHomePage.clickOnEmployees();
-        await expect(adminStorage).toHaveURL(/allemployees/);
-        await expect(empPageAdmin.addEmployeeButton).toBeVisible();
+        await expect.soft(adminStorage).toHaveURL(/allemployees/);
+        await expect.soft(empPageAdmin.addEmployeeButton).toBeVisible();
         const empID = dataGen.getRandomInt(100000, 1000000).toString();
 
         await empPageAdmin.addEmployees(
@@ -36,7 +36,7 @@ test.describe.serial("Add Functionality Suite", () => {
             empData.salary,
             empData.address
         );
-        await expect(empPageAdmin.successMessage).toHaveText("Saved Successfully", { timeout: 3000 });
+        await expect.soft(empPageAdmin.successMessage).toHaveText("Saved Successfully", { timeout: 3000 });
         await createEmployeeStorageState(email, password,browser);
     });
 
