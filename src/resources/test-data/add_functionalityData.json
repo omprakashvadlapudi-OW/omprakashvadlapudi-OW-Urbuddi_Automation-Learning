@@ -1,0 +1,16 @@
+{
+        "firstName": "Robert",
+        "lastName": "Stephen",
+        "role": "Employee",
+        "password": "Rober@123",
+        "dob": "1999-06-06",
+        "doj": "2020-06-06",
+        "qualification": "Degree",
+        "department": "Testing",
+        "gender": "Male",
+        "phone": "9876543210",
+        "bloodGroup": "A+",
+        "designation": "Test Engineer",
+        "salary": "600000",
+        "address": "Earth"
+}

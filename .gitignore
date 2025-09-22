@@ -8,7 +8,7 @@ playwright/.cache/
 
 
 src/resources/storage/
-src/resources/test-data/
+#src/resources/test-data/
 video/
 videos/
 allure-results/
