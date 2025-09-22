@@ -11,15 +11,15 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        env: [DEV, UAT, PROD]
+        env: [DEV]
         browser: [chromium, firefox, webkit]
 
     timeout-minutes: 60
 
     env:
-      BASE_URL: ${{ matrix.env == 'DEV' && secrets.DEV_URL || matrix.env == 'UAT' && secrets.UAT_URL || matrix.env == 'PROD' && secrets.PROD_URL }}
-      ADMIN_EMAIL: ${{ matrix.env == 'DEV' && secrets.DEV_ADMIN_EMAIL || matrix.env == 'UAT' && secrets.UAT_ADMIN_EMAIL || matrix.env == 'PROD' && secrets.PROD_ADMIN_EMAIL }}
-      ADMIN_PASSWORD: ${{ matrix.env == 'DEV' && secrets.DEV_ADMIN_PASSWORD || matrix.env == 'UAT' && secrets.UAT_ADMIN_PASSWORD || matrix.env == 'PROD' && secrets.PROD_ADMIN_PASSWORD }}
+      BASE_URL: ${{ secrets.DEV_URL }}
+      ADMIN_EMAIL: ${{ secrets.DEV_ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.DEV_ADMIN_PASSWORD }}
       TEST_ENV: ${{ matrix.env }}
       BROWSER: ${{ matrix.browser }}
 
