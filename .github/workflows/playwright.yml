@@ -4,27 +4,42 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: windows-latest
 
-    env:
-      DEV_URL: ${{ secrets.DEV_URL }}
-      DEV_ADMIN_EMAIL: ${{ secrets.DEV_ADMIN_EMAIL }}
-      DEV_ADMIN_PASSWORD: ${{ secrets.DEV_ADMIN_PASSWORD }}
-    
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+
     - name: Install dependencies
       run: npm ci
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
+    - name: Set environment variables based on ENV
+      run: |
+        $env:ENV="DEV"   # <-- change this to UAT / PROD later
+        if ($env:ENV -eq "DEV") {
+          echo "BASE_URL=${{ secrets.DEV_URL }}" >> $env:GITHUB_ENV
+          echo "ADMIN_EMAIL=${{ secrets.DEV_ADMIN_EMAIL }}" >> $env:GITHUB_ENV
+          echo "ADMIN_PASSWORD=${{ secrets.DEV_ADMIN_PASSWORD }}" >> $env:GITHUB_ENV
+        } elseif ($env:ENV -eq "UAT") {
+          echo "BASE_URL=${{ secrets.UAT_URL }}" >> $env:GITHUB_ENV
+          echo "ADMIN_EMAIL=${{ secrets.UAT_ADMIN_EMAIL }}" >> $env:GITHUB_ENV
+          echo "ADMIN_PASSWORD=${{ secrets.UAT_ADMIN_PASSWORD }}" >> $env:GITHUB_ENV
+        }
+
     - name: Run Playwright tests
-      run:  $env:ENV="DEV"; $env:BROWSER="chromium"; npx playwright test
+      run: |
+        echo "Running tests on $env:ENV"
+        npx playwright test --reporter=html
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
