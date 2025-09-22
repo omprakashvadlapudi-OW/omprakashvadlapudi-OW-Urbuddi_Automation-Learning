@@ -5,21 +5,23 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:
-    inputs:
-      env:
-        description: "Environment to run tests (DEV/UAT/PROD)"
-        required: true
-        default: "DEV"
-      browser:
-        description: "Browser to run tests (chromium/firefox/webkit)"
-        required: true
-        default: "chromium"
 
 jobs:
   test:
-    timeout-minutes: 60
     runs-on: windows-latest
+    strategy:
+      matrix:
+        env: [DEV, UAT, PROD]
+        browser: [chromium, firefox, webkit]
+
+    timeout-minutes: 60
+
+    env:
+      BASE_URL: ${{ matrix.env == 'DEV' && secrets.DEV_URL || matrix.env == 'UAT' && secrets.UAT_URL || matrix.env == 'PROD' && secrets.PROD_URL }}
+      ADMIN_EMAIL: ${{ matrix.env == 'DEV' && secrets.DEV_ADMIN_EMAIL || matrix.env == 'UAT' && secrets.UAT_ADMIN_EMAIL || matrix.env == 'PROD' && secrets.PROD_ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ matrix.env == 'DEV' && secrets.DEV_ADMIN_PASSWORD || matrix.env == 'UAT' && secrets.UAT_ADMIN_PASSWORD || matrix.env == 'PROD' && secrets.PROD_ADMIN_PASSWORD }}
+      TEST_ENV: ${{ matrix.env }}
+      BROWSER: ${{ matrix.browser }}
 
     steps:
       - uses: actions/checkout@v4
@@ -34,40 +36,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Export secrets as env variables (use bash)
-      - name: Set environment variables from secrets
+      - name: Run Playwright tests
         shell: bash
         run: |
-          ENV="${{ github.event.inputs.env }}"
-          BROWSER="${{ github.event.inputs.browser }}"
-
-          if [ "$ENV" = "DEV" ]; then
-            echo "BASE_URL=${{ secrets.DEV_URL }}" >> $GITHUB_ENV
-            echo "ADMIN_EMAIL=${{ secrets.DEV_ADMIN_EMAIL }}" >> $GITHUB_ENV
-            echo "ADMIN_PASSWORD=${{ secrets.DEV_ADMIN_PASSWORD }}" >> $GITHUB_ENV
-          elif [ "$ENV" = "UAT" ]; then
-            echo "BASE_URL=${{ secrets.UAT_URL }}" >> $GITHUB_ENV
-            echo "ADMIN_EMAIL=${{ secrets.UAT_ADMIN_EMAIL }}" >> $GITHUB_ENV
-            echo "ADMIN_PASSWORD=${{ secrets.UAT_ADMIN_PASSWORD }}" >> $GITHUB_ENV
-          elif [ "$ENV" = "PROD" ]; then
-            echo "BASE_URL=${{ secrets.PROD_URL }}" >> $GITHUB_ENV
-            echo "ADMIN_EMAIL=${{ secrets.PROD_ADMIN_EMAIL }}" >> $GITHUB_ENV
-            echo "ADMIN_PASSWORD=${{ secrets.PROD_ADMIN_PASSWORD }}" >> $GITHUB_ENV
-          fi
-
-          echo "TEST_ENV=$ENV" >> $GITHUB_ENV
-          echo "BROWSER=$BROWSER" >> $GITHUB_ENV
-
-      # Run tests in a separate step (PowerShell is fine here)
-      - name: Run Playwright tests
-        shell: pwsh
-        run: |
-          echo "Running tests on $env:TEST_ENV in browser $env:BROWSER ($env:BASE_URL)"
-          npx playwright test --reporter=html
+          echo "Running tests on $TEST_ENV in browser $BROWSER ($BASE_URL)"
+          npx playwright test --browser=$BROWSER --reporter=html
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.env }}-${{ matrix.browser }}
           path: playwright-report/
           retention-days: 30
