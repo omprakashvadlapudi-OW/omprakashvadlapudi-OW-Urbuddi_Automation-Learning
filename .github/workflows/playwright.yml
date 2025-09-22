@@ -22,9 +22,10 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Set environment variables based on ENV
+    - name: Set environment variables
       run: |
-        $env:ENV="DEV"   # <-- change this to UAT / PROD later
+        $env:ENV="DEV"   # 🔹 Change to UAT/PROD when needed
+
         if ($env:ENV -eq "DEV") {
           echo "BASE_URL=${{ secrets.DEV_URL }}" >> $env:GITHUB_ENV
           echo "ADMIN_EMAIL=${{ secrets.DEV_ADMIN_EMAIL }}" >> $env:GITHUB_ENV
@@ -33,11 +34,15 @@ jobs:
           echo "BASE_URL=${{ secrets.UAT_URL }}" >> $env:GITHUB_ENV
           echo "ADMIN_EMAIL=${{ secrets.UAT_ADMIN_EMAIL }}" >> $env:GITHUB_ENV
           echo "ADMIN_PASSWORD=${{ secrets.UAT_ADMIN_PASSWORD }}" >> $env:GITHUB_ENV
+        } elseif ($env:ENV -eq "PROD") {
+          echo "BASE_URL=${{ secrets.PROD_URL }}" >> $env:GITHUB_ENV
+          echo "ADMIN_EMAIL=${{ secrets.PROD_ADMIN_EMAIL }}" >> $env:GITHUB_ENV
+          echo "ADMIN_PASSWORD=${{ secrets.PROD_ADMIN_PASSWORD }}" >> $env:GITHUB_ENV
         }
 
     - name: Run Playwright tests
       run: |
-        echo "Running tests on $env:ENV"
+        echo "Running tests on $env:ENV ($env:BASE_URL)"
         npx playwright test --reporter=html
 
     - uses: actions/upload-artifact@v4
