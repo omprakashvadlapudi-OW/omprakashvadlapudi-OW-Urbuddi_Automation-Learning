@@ -34,29 +34,31 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+      # Export secrets as env variables (use bash)
       - name: Set environment variables from secrets
-        shell: pwsh
+        shell: bash
         run: |
-          $env:ENV="${{ github.event.inputs.env }}"  # DEV/UAT/PROD
-          $env:BROWSER="${{ github.event.inputs.browser }}"  # chromium/firefox/webkit
+          ENV="${{ github.event.inputs.env }}"
+          BROWSER="${{ github.event.inputs.browser }}"
 
-          if ($env:ENV -eq "DEV") {
-            "BASE_URL=${{ secrets.DEV_URL }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "ADMIN_EMAIL=${{ secrets.DEV_ADMIN_EMAIL }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "ADMIN_PASSWORD=${{ secrets.DEV_ADMIN_PASSWORD }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          } elseif ($env:ENV -eq "UAT") {
-            "BASE_URL=${{ secrets.UAT_URL }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "ADMIN_EMAIL=${{ secrets.UAT_ADMIN_EMAIL }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "ADMIN_PASSWORD=${{ secrets.UAT_ADMIN_PASSWORD }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          } elseif ($env:ENV -eq "PROD") {
-            "BASE_URL=${{ secrets.PROD_URL }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "ADMIN_EMAIL=${{ secrets.PROD_ADMIN_EMAIL }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            "ADMIN_PASSWORD=${{ secrets.PROD_ADMIN_PASSWORD }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          }
+          if [ "$ENV" = "DEV" ]; then
+            echo "BASE_URL=${{ secrets.DEV_URL }}" >> $GITHUB_ENV
+            echo "ADMIN_EMAIL=${{ secrets.DEV_ADMIN_EMAIL }}" >> $GITHUB_ENV
+            echo "ADMIN_PASSWORD=${{ secrets.DEV_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          elif [ "$ENV" = "UAT" ]; then
+            echo "BASE_URL=${{ secrets.UAT_URL }}" >> $GITHUB_ENV
+            echo "ADMIN_EMAIL=${{ secrets.UAT_ADMIN_EMAIL }}" >> $GITHUB_ENV
+            echo "ADMIN_PASSWORD=${{ secrets.UAT_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          elif [ "$ENV" = "PROD" ]; then
+            echo "BASE_URL=${{ secrets.PROD_URL }}" >> $GITHUB_ENV
+            echo "ADMIN_EMAIL=${{ secrets.PROD_ADMIN_EMAIL }}" >> $GITHUB_ENV
+            echo "ADMIN_PASSWORD=${{ secrets.PROD_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          fi
 
-          "TEST_ENV=$env:ENV" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "BROWSER=$env:BROWSER" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "TEST_ENV=$ENV" >> $GITHUB_ENV
+          echo "BROWSER=$BROWSER" >> $GITHUB_ENV
 
+      # Run tests in a separate step (PowerShell is fine here)
       - name: Run Playwright tests
         shell: pwsh
         run: |
