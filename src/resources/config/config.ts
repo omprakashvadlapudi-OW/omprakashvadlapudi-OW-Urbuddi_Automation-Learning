@@ -1,5 +1,5 @@
-// import * as dotenv from "dotenv";
-// dotenv.config();
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const ENV = process.env.ENV?.toUpperCase() || "DEV";
 
