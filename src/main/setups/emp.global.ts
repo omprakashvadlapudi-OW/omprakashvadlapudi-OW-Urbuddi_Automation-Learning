@@ -11,16 +11,16 @@ export async function createEmployeeStorageState(email: string, password: string
   const context: BrowserContext = await browser.newContext();
   const page = await context.newPage();
 
-  console.log("Running Employee UI Setup...");
-  console.log("Base URL:", config.baseURL);
-  console.log("Employee Email:", email);
+  // console.log("Running Employee UI Setup...");
+  // console.log("Base URL:", config.baseURL);
+  // console.log("Employee Email:", email);
   const loginPage = new LoginPage(page);
   await loginPage.openWebsite(config.baseURL);
   await loginPage.loginToApplication(email, password);
   await expect(loginPage.dashboardTitle).toContainText("Logout");
 
   await context.storageState({ path: storagePath });
-  console.log(`Employee storage state saved to: ${storagePath}`);
+  //console.log(`Employee storage state saved to: ${storagePath}`);
 
   await context.close();
 }

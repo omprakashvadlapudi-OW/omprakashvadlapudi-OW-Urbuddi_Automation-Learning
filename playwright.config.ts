@@ -54,12 +54,13 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 2 : undefined,
-  reporter: [['html'], ['list'], ['allure-playwright', { outputFolder: 'allure-results' }]],
+  reporter: [['html'], ['list'], ['allure-playwright', { outputFolder: 'allure-results' }],['github']],
   use: {
     baseURL: process.env.BASE_URL,
     trace: 'on',
     screenshot: 'on',
     video: 'on',
+    headless: true,
   },
   projects,
 });

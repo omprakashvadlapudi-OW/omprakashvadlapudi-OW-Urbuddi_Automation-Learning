@@ -11,7 +11,7 @@ const baseURLMap: Record<string, string> = {
 export const config = {
   baseURL: baseURLMap[ENV],
   admin: {
-    email: process.env[`${ENV}_ADMIN_EMAIL`],
-    password: process.env[`${ENV}_ADMIN_PASSWORD`],
+    email: process.env[`${ENV}_ADMIN_EMAIL`]!,
+    password: process.env[`${ENV}_ADMIN_PASSWORD`]!,
   },
 };
