@@ -6,7 +6,7 @@ export class LoginPage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
-  readonly dashboardTitle:Locator;
+  readonly dashboardTitle: Locator;
 
 
   constructor(page: Page) {
@@ -14,7 +14,7 @@ export class LoginPage {
     this.usernameInput = this.page.locator('#userEmail');
     this.passwordInput = this.page.locator('#userPassword');
     this.loginButton = this.page.locator("button[type='submit']");
-    this.dashboardTitle=this.page.locator("//p[text()='Logout']");
+    this.dashboardTitle = this.page.getByText('Logout');
   }
 
   async openWebsite(url: string) {

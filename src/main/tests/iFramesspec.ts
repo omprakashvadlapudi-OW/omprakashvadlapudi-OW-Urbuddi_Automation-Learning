@@ -1,8 +1,8 @@
-import { test, expect,Page } from "@playwright/test"
+import { test, expect, Page } from "@playwright/test"
 import { IFramesPage } from "../pages/IFramesPage"
 
 test.describe.serial("IFrame test Suit", () => {
-    let page!:Page;
+    let page!: Page;
     let IFrame: IFramesPage;
     test.beforeAll(async ({ browser }) => {
         const context = await browser.newContext();
@@ -22,12 +22,12 @@ test.describe.serial("IFrame test Suit", () => {
         await expect(IFrame.searchBar).toHaveValue("");
     })
 
-    test("IFrame through name Attribute",async()=>{
+    test("IFrame through name Attribute", async () => {
         await IFrame.iFrameAction_UsingNameAttribute("using 'name' Attribute");
         await expect(IFrame.searchBar).toHaveValue("using 'name' Attribute");
     })
 
-    test.afterAll(async()=>{
+    test.afterAll(async () => {
         await page.close();
     })
 })

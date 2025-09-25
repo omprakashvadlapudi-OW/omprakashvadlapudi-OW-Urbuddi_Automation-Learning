@@ -16,31 +16,31 @@ export class LeaveManagementPage {
   readonly existWarning_applyLeave: Locator;
   readonly close_applyLeave: Locator;
   readonly leadOption_wait: Locator;
-  readonly wfhSuccessMessage:Locator;
-  readonly leaveSuccessMessage:Locator;
+  readonly wfhSuccessMessage: Locator;
+  readonly leaveSuccessMessage: Locator;
 
   readonly dataGen: DataGenerator;
 
   constructor(page: Page) {
     this.page = page;
-    this.applyLeaveButton = this.page.locator("//button[text()='Apply Leave']");
+    this.applyLeaveButton = this.page.getByRole('button', { name: 'Apply Leave' })
     this.okButton_applyLeave = this.page.locator(
       "//div[@class='modal']/descendant::button[text()='Ok']"
     );
-    this.fromDate_applyLeave = this.page.locator("#fromDate");
-    this.toDate_applyLeave = this.page.locator("#toDate");
+    this.fromDate_applyLeave = this.page.getByRole('textbox', { name: 'From' });
+    this.toDate_applyLeave = this.page.getByRole('textbox', { name: 'To' });
     this.subjectFeild_applyLeave = this.page.locator("input[name='subject']");
     this.selectLead_applyLeave = this.page.locator("[name='lead']");
     this.reasonTextArea_applyLeave = this.page.locator("textarea[name='reason']");
     this.leaveCheckbox_applyLeave = this.page.locator("#leave");
     this.workfromhomeCheckbox_applyLeave = this.page.locator("#workFromHome");
-    this.submitButton_applyLeave = this.page.locator("//button[text()='Submit']");
+    this.submitButton_applyLeave = this.page.getByRole('button', { name: 'Submit' });
     this.dataGen = new DataGenerator();
     this.existWarning_applyLeave = this.page.locator(".modal-container .modal-children p:last-of-type");
     this.close_applyLeave = this.page.locator(".modal-container svg");
     this.leadOption_wait = this.page.locator("[name='lead']>option");
-    this.wfhSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
-    this.leaveSuccessMessage=this.page.locator("#root .leave-history-container [aria-live='polite']");
+    this.wfhSuccessMessage = this.page.locator("#root .leave-history-container [aria-live='polite']");
+    this.leaveSuccessMessage = this.page.locator("#root .leave-history-container [aria-live='polite']");
   }
 
   async applyLeave(
@@ -48,7 +48,7 @@ export class LeaveManagementPage {
     reason: string,
     leaveType: string
   ) {
-    
+
     await this.openApplyLeaveForm();
     await this.confirmSubmission();
     const minAttr = await this.fromDate_applyLeave.getAttribute("min");
@@ -80,7 +80,7 @@ export class LeaveManagementPage {
   }
 
   async selectLead() {
-    await this.selectLead_applyLeave.selectOption({ index:0 });
+    await this.selectLead_applyLeave.selectOption({ index: 0 });
   }
 
 
@@ -92,7 +92,7 @@ export class LeaveManagementPage {
     await this.reasonTextArea_applyLeave.fill(reason);
   }
 
-  async selectLeaveType(type:string) {
+  async selectLeaveType(type: string) {
     if (type === "leave") {
       await this.leaveCheckbox_applyLeave.check();
     } else {

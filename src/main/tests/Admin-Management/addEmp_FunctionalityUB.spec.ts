@@ -12,8 +12,8 @@ test.describe.serial("Add Functionality Suite", () => {
         password = cred.password;
     });
 
-    test("Add Employee Test", async ({ adminStorage, adminHomePage, empPageAdmin, dataGen,browser }) => {
-        await adminHomePage.clickOnEmployees();
+    test("Add Employee Test", async ({ adminStorage, adminHomePage, empPageAdmin, dataGen, browser }) => {
+        await adminHomePage.clickOnMenu("Employees");
         await expect.soft(adminStorage).toHaveURL(/allemployees/);
         await expect.soft(empPageAdmin.addEmployeeButton).toBeVisible();
         const empID = dataGen.getRandomInt(100000, 1000000).toString();
@@ -37,7 +37,7 @@ test.describe.serial("Add Functionality Suite", () => {
             empData.address
         );
         await expect.soft(empPageAdmin.successMessage).toHaveText("Saved Successfully", { timeout: 3000 });
-        await createEmployeeStorageState(email, password,browser);
+        await createEmployeeStorageState(email, password, browser);
     });
 
 
